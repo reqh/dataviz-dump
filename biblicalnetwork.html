@@ -1,0 +1,221 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis.css" type="text/css" />
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.16.1/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 1000px;
+            height: 1000px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+        #loadingBar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width: 1000px;
+            height: 1000px;
+            background-color:rgba(200,200,200,0.8);
+            -webkit-transition: all 0.5s ease;
+            -moz-transition: all 0.5s ease;
+            -ms-transition: all 0.5s ease;
+            -o-transition: all 0.5s ease;
+            transition: all 0.5s ease;
+            opacity:1;
+        }
+
+        #bar {
+            position:absolute;
+            top:0px;
+            left:0px;
+            width:20px;
+            height:20px;
+            margin:auto auto auto auto;
+            border-radius:11px;
+            border:2px solid rgba(30,30,30,0.05);
+            background: rgb(0, 173, 246); /* Old browsers */
+            box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+        }
+
+        #border {
+            position:absolute;
+            top:10px;
+            left:10px;
+            width:500px;
+            height:23px;
+            margin:auto auto auto auto;
+            box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+            border-radius:10px;
+        }
+
+        #text {
+            position:absolute;
+            top:8px;
+            left:530px;
+            width:30px;
+            height:50px;
+            margin:auto auto auto auto;
+            font-size:22px;
+            color: #000000;
+        }
+
+        div.outerBorder {
+            position:relative;
+            top:400px;
+            width:600px;
+            height:44px;
+            margin:auto auto auto auto;
+            border:8px solid rgba(0,0,0,0.1);
+            background: rgb(252,252,252); /* Old browsers */
+            background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+            border-radius:72px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+        }
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+<div id="loadingBar">
+    <div class="outerBorder">
+        <div id="text">0%</div>
+        <div id="border">
+            <div id="bar"></div>
+        </div>
+    </div>
+</div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"id": "G-d_1", "label": "G-d_1", "shape": "dot", "size": 10}, {"id": "Adam_1", "label": "Adam_1", "shape": "dot", "size": 10}, {"id": "Abram_1", "label": "Abram_1", "shape": "dot", "size": 10}, {"id": "Eve_1", "label": "Eve_1", "shape": "dot", "size": 10}, {"id": "Cain_1", "label": "Cain_1", "shape": "dot", "size": 10}, {"id": "Abel_1", "label": "Abel_1", "shape": "dot", "size": 10}, {"id": "Seth_1", "label": "Seth_1", "shape": "dot", "size": 10}, {"id": "Enoch_1", "label": "Enoch_1", "shape": "dot", "size": 10}, {"id": "Irad_1", "label": "Irad_1", "shape": "dot", "size": 10}, {"id": "Mehujael_1", "label": "Mehujael_1", "shape": "dot", "size": 10}, {"id": "Methushael_1", "label": "Methushael_1", "shape": "dot", "size": 10}, {"id": "Lamech_1", "label": "Lamech_1", "shape": "dot", "size": 10}, {"id": "Adah_1", "label": "Adah_1", "shape": "dot", "size": 10}, {"id": "Zillah_1", "label": "Zillah_1", "shape": "dot", "size": 10}, {"id": "Jabal_1", "label": "Jabal_1", "shape": "dot", "size": 10}, {"id": "Jubal_1", "label": "Jubal_1", "shape": "dot", "size": 10}, {"id": "Tubal-cain_1", "label": "Tubal-cain_1", "shape": "dot", "size": 10}, {"id": "Naamah_1", "label": "Naamah_1", "shape": "dot", "size": 10}, {"id": "Enosh_1", "label": "Enosh_1", "shape": "dot", "size": 10}, {"id": "Kenan_1", "label": "Kenan_1", "shape": "dot", "size": 10}, {"id": "Mahalalel_1", "label": "Mahalalel_1", "shape": "dot", "size": 10}, {"id": "Jared_1", "label": "Jared_1", "shape": "dot", "size": 10}, {"id": "Enoch_2", "label": "Enoch_2", "shape": "dot", "size": 10}, {"id": "Methuselah_1", "label": "Methuselah_1", "shape": "dot", "size": 10}, {"id": "Lamech_2", "label": "Lamech_2", "shape": "dot", "size": 10}, {"id": "Noah_1", "label": "Noah_1", "shape": "dot", "size": 10}, {"id": "Japheth_1", "label": "Japheth_1", "shape": "dot", "size": 10}, {"id": "Shem_1", "label": "Shem_1", "shape": "dot", "size": 10}, {"id": "Ham_1", "label": "Ham_1", "shape": "dot", "size": 10}, {"id": "Gomer_1", "label": "Gomer_1", "shape": "dot", "size": 10}, {"id": "Magog_1", "label": "Magog_1", "shape": "dot", "size": 10}, {"id": "Madai_1", "label": "Madai_1", "shape": "dot", "size": 10}, {"id": "Javan_1", "label": "Javan_1", "shape": "dot", "size": 10}, {"id": "Tubal_1", "label": "Tubal_1", "shape": "dot", "size": 10}, {"id": "Meshech_1", "label": "Meshech_1", "shape": "dot", "size": 10}, {"id": "Tiras_1", "label": "Tiras_1", "shape": "dot", "size": 10}, {"id": "Elishah_2", "label": "Elishah_2", "shape": "dot", "size": 10}, {"id": "Elam_1", "label": "Elam_1", "shape": "dot", "size": 10}, {"id": "Asshur_1", "label": "Asshur_1", "shape": "dot", "size": 10}, {"id": "Arpachshad_1", "label": "Arpachshad_1", "shape": "dot", "size": 10}, {"id": "Lud_2", "label": "Lud_2", "shape": "dot", "size": 10}, {"id": "Aram_1", "label": "Aram_1", "shape": "dot", "size": 10}, {"id": "Canaan_1", "label": "Canaan_1", "shape": "dot", "size": 10}, {"id": "Cush_1", "label": "Cush_1", "shape": "dot", "size": 10}, {"id": "Mizraim_1", "label": "Mizraim_1", "shape": "dot", "size": 10}, {"id": "Put_1", "label": "Put_1", "shape": "dot", "size": 10}, {"id": "Sidon_1", "label": "Sidon_1", "shape": "dot", "size": 10}, {"id": "Heth_1", "label": "Heth_1", "shape": "dot", "size": 10}, {"id": "Jebus_1", "label": "Jebus_1", "shape": "dot", "size": 10}, {"id": "Amor_1", "label": "Amor_1", "shape": "dot", "size": 10}, {"id": "Girgash_1", "label": "Girgash_1", "shape": "dot", "size": 10}, {"id": "Hivi_1", "label": "Hivi_1", "shape": "dot", "size": 10}, {"id": "Ark_1", "label": "Ark_1", "shape": "dot", "size": 10}, {"id": "Sini_1", "label": "Sini_1", "shape": "dot", "size": 10}, {"id": "Arvad_1", "label": "Arvad_1", "shape": "dot", "size": 10}, {"id": "Zemar_1", "label": "Zemar_1", "shape": "dot", "size": 10}, {"id": "Hamath_1", "label": "Hamath_1", "shape": "dot", "size": 10}, {"id": "Ashkenaz_1", "label": "Ashkenaz_1", "shape": "dot", "size": 10}, {"id": "Riphath_1", "label": "Riphath_1", "shape": "dot", "size": 10}, {"id": "Togarmah_1", "label": "Togarmah_1", "shape": "dot", "size": 10}, {"id": "Elishah_1", "label": "Elishah_1", "shape": "dot", "size": 10}, {"id": "Tarshish_1", "label": "Tarshish_1", "shape": "dot", "size": 10}, {"id": "Kittim_1", "label": "Kittim_1", "shape": "dot", "size": 10}, {"id": "Dodanim_1", "label": "Dodanim_1", "shape": "dot", "size": 10}, {"id": "Seba_1", "label": "Seba_1", "shape": "dot", "size": 10}, {"id": "Havilah_1", "label": "Havilah_1", "shape": "dot", "size": 10}, {"id": "Sabtah_1", "label": "Sabtah_1", "shape": "dot", "size": 10}, {"id": "Raamah_1", "label": "Raamah_1", "shape": "dot", "size": 10}, {"id": "Sabteca_1", "label": "Sabteca_1", "shape": "dot", "size": 10}, {"id": "Nimrod_1", "label": "Nimrod_1", "shape": "dot", "size": 10}, {"id": "Lud_1", "label": "Lud_1", "shape": "dot", "size": 10}, {"id": "Anam_1", "label": "Anam_1", "shape": "dot", "size": 10}, {"id": "Lehab_1", "label": "Lehab_1", "shape": "dot", "size": 10}, {"id": "Naphtuh_1", "label": "Naphtuh_1", "shape": "dot", "size": 10}, {"id": "Pathrus_1", "label": "Pathrus_1", "shape": "dot", "size": 10}, {"id": "Casluh_1", "label": "Casluh_1", "shape": "dot", "size": 10}, {"id": "Caphtor_1", "label": "Caphtor_1", "shape": "dot", "size": 10}, {"id": "Sheba_1", "label": "Sheba_1", "shape": "dot", "size": 10}, {"id": "Dedan_1", "label": "Dedan_1", "shape": "dot", "size": 10}, {"id": "Zohar_1", "label": "Zohar_1", "shape": "dot", "size": 10}, {"id": "Ephron_1", "label": "Ephron_1", "shape": "dot", "size": 10}, {"id": "Beeri_1", "label": "Beeri_1", "shape": "dot", "size": 10}, {"id": "Elon_1", "label": "Elon_1", "shape": "dot", "size": 10}, {"id": "Mamre_1", "label": "Mamre_1", "shape": "dot", "size": 10}, {"id": "Eshcol_1", "label": "Eshcol_1", "shape": "dot", "size": 10}, {"id": "Aner_1", "label": "Aner_1", "shape": "dot", "size": 10}, {"id": "Shelah_1", "label": "Shelah_1", "shape": "dot", "size": 10}, {"id": "Uz_1", "label": "Uz_1", "shape": "dot", "size": 10}, {"id": "Hul_1", "label": "Hul_1", "shape": "dot", "size": 10}, {"id": "Gether_1", "label": "Gether_1", "shape": "dot", "size": 10}, {"id": "Mash_1", "label": "Mash_1", "shape": "dot", "size": 10}, {"id": "Eber_1", "label": "Eber_1", "shape": "dot", "size": 10}, {"id": "Peleg_1", "label": "Peleg_1", "shape": "dot", "size": 10}, {"id": "Joktan_1", "label": "Joktan_1", "shape": "dot", "size": 10}, {"id": "Reu_1", "label": "Reu_1", "shape": "dot", "size": 10}, {"id": "Almodad_1", "label": "Almodad_1", "shape": "dot", "size": 10}, {"id": "Sheleph_1", "label": "Sheleph_1", "shape": "dot", "size": 10}, {"id": "Hazarmaveth_1", "label": "Hazarmaveth_1", "shape": "dot", "size": 10}, {"id": "Jerah_1", "label": "Jerah_1", "shape": "dot", "size": 10}, {"id": "Hadoram_1", "label": "Hadoram_1", "shape": "dot", "size": 10}, {"id": "Uzal_1", "label": "Uzal_1", "shape": "dot", "size": 10}, {"id": "Diklah_1", "label": "Diklah_1", "shape": "dot", "size": 10}, {"id": "Obal_1", "label": "Obal_1", "shape": "dot", "size": 10}, {"id": "Abimael_1", "label": "Abimael_1", "shape": "dot", "size": 10}, {"id": "Sheba_2", "label": "Sheba_2", "shape": "dot", "size": 10}, {"id": "Ophir_1", "label": "Ophir_1", "shape": "dot", "size": 10}, {"id": "Havilah_2", "label": "Havilah_2", "shape": "dot", "size": 10}, {"id": "Jobab_1", "label": "Jobab_1", "shape": "dot", "size": 10}, {"id": "Serug_1", "label": "Serug_1", "shape": "dot", "size": 10}, {"id": "Nahor_1", "label": "Nahor_1", "shape": "dot", "size": 10}, {"id": "Terah_1", "label": "Terah_1", "shape": "dot", "size": 10}, {"id": "Nahor_2", "label": "Nahor_2", "shape": "dot", "size": 10}, {"id": "Haran_1", "label": "Haran_1", "shape": "dot", "size": 10}, {"id": "Sarai_1", "label": "Sarai_1", "shape": "dot", "size": 10}, {"id": "Eliezer_1", "label": "Eliezer_1", "shape": "dot", "size": 10}, {"id": "Hagar_1", "label": "Hagar_1", "shape": "dot", "size": 10}, {"id": "Ishmael_1", "label": "Ishmael_1", "shape": "dot", "size": 10}, {"id": "Isaac_1", "label": "Isaac_1", "shape": "dot", "size": 10}, {"id": "Keturah_1", "label": "Keturah_1", "shape": "dot", "size": 10}, {"id": "Zimran_1", "label": "Zimran_1", "shape": "dot", "size": 10}, {"id": "Jokshan_1", "label": "Jokshan_1", "shape": "dot", "size": 10}, {"id": "Medan_1", "label": "Medan_1", "shape": "dot", "size": 10}, {"id": "Midian_1", "label": "Midian_1", "shape": "dot", "size": 10}, {"id": "Ishbak_1", "label": "Ishbak_1", "shape": "dot", "size": 10}, {"id": "Shuah_1", "label": "Shuah_1", "shape": "dot", "size": 10}, {"id": "Milcah_1", "label": "Milcah_1", "shape": "dot", "size": 10}, {"id": "Uz_2", "label": "Uz_2", "shape": "dot", "size": 10}, {"id": "Buz_1", "label": "Buz_1", "shape": "dot", "size": 10}, {"id": "Kemuel_1", "label": "Kemuel_1", "shape": "dot", "size": 10}, {"id": "Chesed_1", "label": "Chesed_1", "shape": "dot", "size": 10}, {"id": "Hazo_1", "label": "Hazo_1", "shape": "dot", "size": 10}, {"id": "Pildash_1", "label": "Pildash_1", "shape": "dot", "size": 10}, {"id": "Jidlaph_1", "label": "Jidlaph_1", "shape": "dot", "size": 10}, {"id": "Bethuel_1", "label": "Bethuel_1", "shape": "dot", "size": 10}, {"id": "Reumah_1", "label": "Reumah_1", "shape": "dot", "size": 10}, {"id": "Tebah_1", "label": "Tebah_1", "shape": "dot", "size": 10}, {"id": "Gaham_1", "label": "Gaham_1", "shape": "dot", "size": 10}, {"id": "Tahash_1", "label": "Tahash_1", "shape": "dot", "size": 10}, {"id": "Maacah_1", "label": "Maacah_1", "shape": "dot", "size": 10}, {"id": "Lot_1", "label": "Lot_1", "shape": "dot", "size": 10}, {"id": "Iscah_1", "label": "Iscah_1", "shape": "dot", "size": 10}, {"id": "Wife of Lot_1", "label": "Wife of Lot_1", "shape": "dot", "size": 10}, {"id": "Firstborn of Lot_1", "label": "Firstborn of Lot_1", "shape": "dot", "size": 10}, {"id": "Younger of Lot_1", "label": "Younger of Lot_1", "shape": "dot", "size": 10}, {"id": "Moab_1", "label": "Moab_1", "shape": "dot", "size": 10}, {"id": "Ben-ammi_1", "label": "Ben-ammi_1", "shape": "dot", "size": 10}, {"id": "Nebaioth_1", "label": "Nebaioth_1", "shape": "dot", "size": 10}, {"id": "Kedar_1", "label": "Kedar_1", "shape": "dot", "size": 10}, {"id": "Adbeel_1", "label": "Adbeel_1", "shape": "dot", "size": 10}, {"id": "Mibsam_1", "label": "Mibsam_1", "shape": "dot", "size": 10}, {"id": "Mishma_1", "label": "Mishma_1", "shape": "dot", "size": 10}, {"id": "Dumah_1", "label": "Dumah_1", "shape": "dot", "size": 10}, {"id": "Massa_1", "label": "Massa_1", "shape": "dot", "size": 10}, {"id": "Hadad_1", "label": "Hadad_1", "shape": "dot", "size": 10}, {"id": "Tema_1", "label": "Tema_1", "shape": "dot", "size": 10}, {"id": "Jetur_1", "label": "Jetur_1", "shape": "dot", "size": 10}, {"id": "Naphish_1", "label": "Naphish_1", "shape": "dot", "size": 10}, {"id": "Kedemah_1", "label": "Kedemah_1", "shape": "dot", "size": 10}, {"id": "Mahalath_1", "label": "Mahalath_1", "shape": "dot", "size": 10}, {"id": "Esau_1", "label": "Esau_1", "shape": "dot", "size": 10}, {"id": "Jacob_1", "label": "Jacob_1", "shape": "dot", "size": 10}, {"id": "Abimelech_1", "label": "Abimelech_1", "shape": "dot", "size": 10}, {"id": "Phicol_1", "label": "Phicol_1", "shape": "dot", "size": 10}, {"id": "Aram_2", "label": "Aram_2", "shape": "dot", "size": 10}, {"id": "Rebekah_1", "label": "Rebekah_1", "shape": "dot", "size": 10}, {"id": "Laban_1", "label": "Laban_1", "shape": "dot", "size": 10}, {"id": "Rachel_1", "label": "Rachel_1", "shape": "dot", "size": 10}, {"id": "Leah_1", "label": "Leah_1", "shape": "dot", "size": 10}, {"id": "Sheba_3", "label": "Sheba_3", "shape": "dot", "size": 10}, {"id": "Dedan_2", "label": "Dedan_2", "shape": "dot", "size": 10}, {"id": "Ephah_1", "label": "Ephah_1", "shape": "dot", "size": 10}, {"id": "Epher_1", "label": "Epher_1", "shape": "dot", "size": 10}, {"id": "Hanoch_1", "label": "Hanoch_1", "shape": "dot", "size": 10}, {"id": "Abida_1", "label": "Abida_1", "shape": "dot", "size": 10}, {"id": "Eldaah_1", "label": "Eldaah_1", "shape": "dot", "size": 10}, {"id": "Asshur_2", "label": "Asshur_2", "shape": "dot", "size": 10}, {"id": "Letush_1", "label": "Letush_1", "shape": "dot", "size": 10}, {"id": "Leum_1", "label": "Leum_1", "shape": "dot", "size": 10}, {"id": "Judith_1", "label": "Judith_1", "shape": "dot", "size": 10}, {"id": "Basemath_1", "label": "Basemath_1", "shape": "dot", "size": 10}, {"id": "Reuben_1", "label": "Reuben_1", "shape": "dot", "size": 10}, {"id": "Simeon_1", "label": "Simeon_1", "shape": "dot", "size": 10}, {"id": "Levi_1", "label": "Levi_1", "shape": "dot", "size": 10}, {"id": "Judah_1", "label": "Judah_1", "shape": "dot", "size": 10}, {"id": "Bilhah_1", "label": "Bilhah_1", "shape": "dot", "size": 10}, {"id": "Dan_1", "label": "Dan_1", "shape": "dot", "size": 10}, {"id": "Zilpah_1", "label": "Zilpah_1", "shape": "dot", "size": 10}]);
+        edges = new vis.DataSet([{"from": "G-d_1", "relationship_type": "creation", "to": "Adam_1", "weight": 1}, {"from": "G-d_1", "relationship_type": "servant", "to": "Abram_1", "weight": 1}, {"from": "Adam_1", "relationship_type": "wife", "to": "Eve_1", "weight": 1}, {"from": "Adam_1", "relationship_type": "son", "to": "Cain_1", "weight": 1}, {"from": "Adam_1", "relationship_type": "son", "to": "Abel_1", "weight": 1}, {"from": "Adam_1", "relationship_type": "son", "to": "Seth_1", "weight": 1}, {"from": "Eve_1", "relationship_type": "son", "to": "Cain_1", "weight": 1}, {"from": "Eve_1", "relationship_type": "son", "to": "Abel_1", "weight": 1}, {"from": "Eve_1", "relationship_type": "son", "to": "Seth_1", "weight": 1}, {"from": "Cain_1", "relationship_type": "killed by", "to": "Abel_1", "weight": 1}, {"from": "Cain_1", "relationship_type": "son", "to": "Enoch_1", "weight": 1}, {"from": "Enoch_1", "relationship_type": "son", "to": "Irad_1", "weight": 1}, {"from": "Irad_1", "relationship_type": "son", "to": "Mehujael_1", "weight": 1}, {"from": "Mehujael_1", "relationship_type": "son", "to": "Methushael_1", "weight": 1}, {"from": "Methushael_1", "relationship_type": "son", "to": "Lamech_1", "weight": 1}, {"from": "Lamech_1", "relationship_type": "wife", "to": "Adah_1", "weight": 1}, {"from": "Lamech_1", "relationship_type": "wife", "to": "Zillah_1", "weight": 1}, {"from": "Lamech_1", "relationship_type": "son", "to": "Jabal_1", "weight": 1}, {"from": "Lamech_1", "relationship_type": "son", "to": "Jubal_1", "weight": 1}, {"from": "Lamech_1", "relationship_type": "son", "to": "Tubal-cain_1", "weight": 1}, {"from": "Lamech_1", "relationship_type": "daughter", "to": "Naamah_1", "weight": 1}, {"from": "Adah_1", "relationship_type": "son", "to": "Jabal_1", "weight": 1}, {"from": "Adah_1", "relationship_type": "son", "to": "Jubal_1", "weight": 1}, {"from": "Zillah_1", "relationship_type": "son", "to": "Tubal-cain_1", "weight": 1}, {"from": "Zillah_1", "relationship_type": "daughter", "to": "Naamah_1", "weight": 1}, {"from": "Tubal-cain_1", "relationship_type": "sister", "to": "Naamah_1", "weight": 1}, {"from": "Seth_1", "relationship_type": "son", "to": "Enosh_1", "weight": 1}, {"from": "Enosh_1", "relationship_type": "son", "to": "Kenan_1", "weight": 1}, {"from": "Kenan_1", "relationship_type": "son", "to": "Mahalalel_1", "weight": 1}, {"from": "Mahalalel_1", "relationship_type": "son", "to": "Jared_1", "weight": 1}, {"from": "Jared_1", "relationship_type": "son", "to": "Enoch_2", "weight": 1}, {"from": "Enoch_2", "relationship_type": "son", "to": "Methuselah_1", "weight": 1}, {"from": "Methuselah_1", "relationship_type": "son", "to": "Lamech_2", "weight": 1}, {"from": "Lamech_2", "relationship_type": "son", "to": "Noah_1", "weight": 1}, {"from": "Noah_1", "relationship_type": "son", "to": "Japheth_1", "weight": 1}, {"from": "Noah_1", "relationship_type": "son", "to": "Shem_1", "weight": 1}, {"from": "Noah_1", "relationship_type": "son", "to": "Ham_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Gomer_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Magog_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Madai_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Javan_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Tubal_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Meshech_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Tiras_1", "weight": 1}, {"from": "Japheth_1", "relationship_type": "son", "to": "Elishah_2", "weight": 1}, {"from": "Shem_1", "relationship_type": "son", "to": "Elam_1", "weight": 1}, {"from": "Shem_1", "relationship_type": "son", "to": "Asshur_1", "weight": 1}, {"from": "Shem_1", "relationship_type": "son", "to": "Arpachshad_1", "weight": 1}, {"from": "Shem_1", "relationship_type": "son", "to": "Lud_2", "weight": 1}, {"from": "Shem_1", "relationship_type": "son", "to": "Aram_1", "weight": 1}, {"from": "Ham_1", "relationship_type": "son", "to": "Canaan_1", "weight": 1}, {"from": "Ham_1", "relationship_type": "son", "to": "Cush_1", "weight": 1}, {"from": "Ham_1", "relationship_type": "son", "to": "Mizraim_1", "weight": 1}, {"from": "Ham_1", "relationship_type": "son", "to": "Put_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Sidon_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Heth_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Jebus_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Amor_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Girgash_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Hivi_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Ark_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Sini_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Arvad_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Zemar_1", "weight": 1}, {"from": "Canaan_1", "relationship_type": "son", "to": "Hamath_1", "weight": 1}, {"from": "Gomer_1", "relationship_type": "son", "to": "Ashkenaz_1", "weight": 1}, {"from": "Gomer_1", "relationship_type": "son", "to": "Riphath_1", "weight": 1}, {"from": "Gomer_1", "relationship_type": "son", "to": "Togarmah_1", "weight": 1}, {"from": "Javan_1", "relationship_type": "son", "to": "Elishah_1", "weight": 1}, {"from": "Javan_1", "relationship_type": "son", "to": "Tarshish_1", "weight": 1}, {"from": "Javan_1", "relationship_type": "son", "to": "Kittim_1", "weight": 1}, {"from": "Javan_1", "relationship_type": "son", "to": "Dodanim_1", "weight": 1}, {"from": "Cush_1", "relationship_type": "son", "to": "Seba_1", "weight": 1}, {"from": "Cush_1", "relationship_type": "son", "to": "Havilah_1", "weight": 1}, {"from": "Cush_1", "relationship_type": "son", "to": "Sabtah_1", "weight": 1}, {"from": "Cush_1", "relationship_type": "son", "to": "Raamah_1", "weight": 1}, {"from": "Cush_1", "relationship_type": "son", "to": "Sabteca_1", "weight": 1}, {"from": "Cush_1", "relationship_type": "son", "to": "Nimrod_1", "weight": 1}, {"from": "Mizraim_1", "relationship_type": "son", "to": "Lud_1", "weight": 1}, {"from": "Mizraim_1", "relationship_type": "son", "to": "Anam_1", "weight": 1}, {"from": "Mizraim_1", "relationship_type": "son", "to": "Lehab_1", "weight": 1}, {"from": "Mizraim_1", "relationship_type": "son", "to": "Naphtuh_1", "weight": 1}, {"from": "Mizraim_1", "relationship_type": "son", "to": "Pathrus_1", "weight": 1}, {"from": "Mizraim_1", "relationship_type": "son", "to": "Casluh_1", "weight": 1}, {"from": "Mizraim_1", "relationship_type": "son", "to": "Caphtor_1", "weight": 1}, {"from": "Raamah_1", "relationship_type": "son", "to": "Sheba_1", "weight": 1}, {"from": "Raamah_1", "relationship_type": "son", "to": "Dedan_1", "weight": 1}, {"from": "Heth_1", "relationship_type": "descendant", "to": "Zohar_1", "weight": 1}, {"from": "Heth_1", "relationship_type": "descendant", "to": "Ephron_1", "weight": 1}, {"from": "Heth_1", "relationship_type": "descendant", "to": "Beeri_1", "weight": 1}, {"from": "Heth_1", "relationship_type": "descendant", "to": "Elon_1", "weight": 1}, {"from": "Amor_1", "relationship_type": "ancestor", "to": "Mamre_1", "weight": 1}, {"from": "Amor_1", "relationship_type": "ancestor", "to": "Eshcol_1", "weight": 1}, {"from": "Amor_1", "relationship_type": "ancestor", "to": "Aner_1", "weight": 1}, {"from": "Arpachshad_1", "relationship_type": "son", "to": "Shelah_1", "weight": 1}, {"from": "Aram_1", "relationship_type": "son", "to": "Uz_1", "weight": 1}, {"from": "Aram_1", "relationship_type": "son", "to": "Hul_1", "weight": 1}, {"from": "Aram_1", "relationship_type": "son", "to": "Gether_1", "weight": 1}, {"from": "Aram_1", "relationship_type": "son", "to": "Mash_1", "weight": 1}, {"from": "Shelah_1", "relationship_type": "son", "to": "Eber_1", "weight": 1}, {"from": "Eber_1", "relationship_type": "son", "to": "Peleg_1", "weight": 1}, {"from": "Eber_1", "relationship_type": "son", "to": "Joktan_1", "weight": 1}, {"from": "Peleg_1", "relationship_type": "son", "to": "Reu_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Almodad_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Sheleph_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Hazarmaveth_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Jerah_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Hadoram_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Uzal_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Diklah_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Obal_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Abimael_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Sheba_2", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Ophir_1", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Havilah_2", "weight": 1}, {"from": "Joktan_1", "relationship_type": "son", "to": "Jobab_1", "weight": 1}, {"from": "Reu_1", "relationship_type": "son", "to": "Serug_1", "weight": 1}, {"from": "Serug_1", "relationship_type": "son", "to": "Nahor_1", "weight": 1}, {"from": "Nahor_1", "relationship_type": "son", "to": "Terah_1", "weight": 1}, {"from": "Terah_1", "relationship_type": "son", "to": "Abram_1", "weight": 1}, {"from": "Terah_1", "relationship_type": "son", "to": "Nahor_2", "weight": 1}, {"from": "Terah_1", "relationship_type": "son", "to": "Haran_1", "weight": 1}, {"from": "Terah_1", "relationship_type": "daughter", "to": "Sarai_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "half-sister", "to": "Sarai_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "ally", "to": "Mamre_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "ally", "to": "Aner_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "ally", "to": "Eshcol_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "original inheritor", "to": "Eliezer_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "concubine", "to": "Hagar_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Ishmael_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Isaac_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "wife", "to": "Keturah_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Zimran_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Jokshan_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Medan_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Midian_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Ishbak_1", "weight": 1}, {"from": "Abram_1", "relationship_type": "son", "to": "Shuah_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "wife", "to": "Milcah_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Uz_2", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Buz_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Kemuel_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Chesed_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Hazo_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Pildash_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Jidlaph_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Bethuel_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "concubine", "to": "Reumah_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Tebah_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Gaham_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Tahash_1", "weight": 1}, {"from": "Nahor_2", "relationship_type": "son", "to": "Maacah_1", "weight": 1}, {"from": "Haran_1", "relationship_type": "son", "to": "Lot_1", "weight": 1}, {"from": "Haran_1", "relationship_type": "daughter", "to": "Milcah_1", "weight": 1}, {"from": "Haran_1", "relationship_type": "daughter", "to": "Iscah_1", "weight": 1}, {"from": "Lot_1", "relationship_type": "wife", "to": "Wife of Lot_1", "weight": 1}, {"from": "Lot_1", "relationship_type": "daughter", "to": "Firstborn of Lot_1", "weight": 1}, {"from": "Lot_1", "relationship_type": "daughter", "to": "Younger of Lot_1", "weight": 1}, {"from": "Lot_1", "relationship_type": "son", "to": "Moab_1", "weight": 1}, {"from": "Lot_1", "relationship_type": "son", "to": "Ben-ammi_1", "weight": 1}, {"from": "Sarai_1", "relationship_type": "servant", "to": "Hagar_1", "weight": 1}, {"from": "Sarai_1", "relationship_type": "son", "to": "Isaac_1", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Uz_2", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Buz_1", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Kemuel_1", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Chesed_1", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Hazo_1", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Pildash_1", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Jidlaph_1", "weight": 1}, {"from": "Milcah_1", "relationship_type": "son", "to": "Bethuel_1", "weight": 1}, {"from": "Mamre_1", "relationship_type": "brother", "to": "Eshcol_1", "weight": 1}, {"from": "Mamre_1", "relationship_type": "brother", "to": "Aner_1", "weight": 1}, {"from": "Eshcol_1", "relationship_type": "brother", "to": "Aner_1", "weight": 1}, {"from": "Hagar_1", "relationship_type": "son", "to": "Ishmael_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Nebaioth_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Kedar_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Adbeel_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Mibsam_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Mishma_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Dumah_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Massa_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Hadad_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Tema_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Jetur_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Naphish_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "son", "to": "Kedemah_1", "weight": 1}, {"from": "Ishmael_1", "relationship_type": "daughter", "to": "Mahalath_1", "weight": 1}, {"from": "Isaac_1", "relationship_type": "son", "to": "Esau_1", "weight": 1}, {"from": "Isaac_1", "relationship_type": "son", "to": "Jacob_1", "weight": 1}, {"from": "Firstborn of Lot_1", "relationship_type": "son", "to": "Moab_1", "weight": 1}, {"from": "Younger of Lot_1", "relationship_type": "son", "to": "Ben-ammi_1", "weight": 1}, {"from": "Abimelech_1", "relationship_type": "army commander", "to": "Phicol_1", "weight": 1}, {"from": "Kemuel_1", "relationship_type": "son", "to": "Aram_2", "weight": 1}, {"from": "Bethuel_1", "relationship_type": "daughter", "to": "Rebekah_1", "weight": 1}, {"from": "Rebekah_1", "relationship_type": "sister", "to": "Laban_1", "weight": 1}, {"from": "Rebekah_1", "relationship_type": "son", "to": "Esau_1", "weight": 1}, {"from": "Rebekah_1", "relationship_type": "son", "to": "Jacob_1", "weight": 1}, {"from": "Reumah_1", "relationship_type": "son", "to": "Tebah_1", "weight": 1}, {"from": "Reumah_1", "relationship_type": "son", "to": "Gaham_1", "weight": 1}, {"from": "Reumah_1", "relationship_type": "son", "to": "Tahash_1", "weight": 1}, {"from": "Reumah_1", "relationship_type": "son", "to": "Maacah_1", "weight": 1}, {"from": "Zohar_1", "relationship_type": "son", "to": "Ephron_1", "weight": 1}, {"from": "Laban_1", "relationship_type": "daughter", "to": "Rachel_1", "weight": 1}, {"from": "Laban_1", "relationship_type": "daughter", "to": "Leah_1", "weight": 1}, {"from": "Keturah_1", "relationship_type": "son", "to": "Zimran_1", "weight": 1}, {"from": "Keturah_1", "relationship_type": "son", "to": "Jokshan_1", "weight": 1}, {"from": "Keturah_1", "relationship_type": "son", "to": "Medan_1", "weight": 1}, {"from": "Keturah_1", "relationship_type": "son", "to": "Midian_1", "weight": 1}, {"from": "Keturah_1", "relationship_type": "son", "to": "Ishbak_1", "weight": 1}, {"from": "Keturah_1", "relationship_type": "son", "to": "Shuah_1", "weight": 1}, {"from": "Jokshan_1", "relationship_type": "son", "to": "Sheba_3", "weight": 1}, {"from": "Jokshan_1", "relationship_type": "son", "to": "Dedan_2", "weight": 1}, {"from": "Midian_1", "relationship_type": "son", "to": "Ephah_1", "weight": 1}, {"from": "Midian_1", "relationship_type": "son", "to": "Epher_1", "weight": 1}, {"from": "Midian_1", "relationship_type": "son", "to": "Hanoch_1", "weight": 1}, {"from": "Midian_1", "relationship_type": "son", "to": "Abida_1", "weight": 1}, {"from": "Midian_1", "relationship_type": "son", "to": "Eldaah_1", "weight": 1}, {"from": "Dedan_2", "relationship_type": "son", "to": "Asshur_2", "weight": 1}, {"from": "Dedan_2", "relationship_type": "son", "to": "Letush_1", "weight": 1}, {"from": "Dedan_2", "relationship_type": "son", "to": "Leum_1", "weight": 1}, {"from": "Nebaioth_1", "relationship_type": "brother", "to": "Mahalath_1", "weight": 1}, {"from": "Esau_1", "relationship_type": "wife", "to": "Judith_1", "weight": 1}, {"from": "Esau_1", "relationship_type": "wife", "to": "Basemath_1", "weight": 1}, {"from": "Esau_1", "relationship_type": "wife", "to": "Mahalath_1", "weight": 1}, {"from": "Jacob_1", "relationship_type": "son", "to": "Reuben_1", "weight": 1}, {"from": "Jacob_1", "relationship_type": "son", "to": "Simeon_1", "weight": 1}, {"from": "Jacob_1", "relationship_type": "son", "to": "Levi_1", "weight": 1}, {"from": "Jacob_1", "relationship_type": "son", "to": "Judah_1", "weight": 1}, {"from": "Jacob_1", "relationship_type": "wife", "to": "Bilhah_1", "weight": 1}, {"from": "Jacob_1", "relationship_type": "son", "to": "Dan_1", "weight": 1}, {"from": "Judith_1", "relationship_type": "daughter", "to": "Beeri_1", "weight": 1}, {"from": "Basemath_1", "relationship_type": "daughter", "to": "Elon_1", "weight": 1}, {"from": "Rachel_1", "relationship_type": "sister", "to": "Leah_1", "weight": 1}, {"from": "Rachel_1", "relationship_type": "servant", "to": "Bilhah_1", "weight": 1}, {"from": "Leah_1", "relationship_type": "servant", "to": "Zilpah_1", "weight": 1}, {"from": "Leah_1", "relationship_type": "son", "to": "Reuben_1", "weight": 1}, {"from": "Leah_1", "relationship_type": "son", "to": "Simeon_1", "weight": 1}, {"from": "Leah_1", "relationship_type": "son", "to": "Levi_1", "weight": 1}, {"from": "Leah_1", "relationship_type": "son", "to": "Judah_1", "weight": 1}, {"from": "Bilhah_1", "relationship_type": "son", "to": "Dan_1", "weight": 1}, {"from": "Reuben_1", "relationship_type": "brother", "to": "Simeon_1", "weight": 1}, {"from": "Reuben_1", "relationship_type": "brother", "to": "Levi_1", "weight": 1}, {"from": "Reuben_1", "relationship_type": "brother", "to": "Judah_1", "weight": 1}, {"from": "Reuben_1", "relationship_type": "half-brother", "to": "Dan_1", "weight": 1}, {"from": "Simeon_1", "relationship_type": "brother", "to": "Levi_1", "weight": 1}, {"from": "Simeon_1", "relationship_type": "brother", "to": "Judah_1", "weight": 1}, {"from": "Simeon_1", "relationship_type": "half-brother", "to": "Dan_1", "weight": 1}, {"from": "Levi_1", "relationship_type": "brother", "to": "Judah_1", "weight": 1}, {"from": "Levi_1", "relationship_type": "half-brother", "to": "Dan_1", "weight": 1}, {"from": "Judah_1", "relationship_type": "half-brother", "to": "Dan_1", "weight": 1}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "nodes",
+            "edges",
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": false,
+            "type": "continuous"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+        network.on("stabilizationProgress", function(params) {
+      		document.getElementById('loadingBar').removeAttribute("style");
+	        var maxWidth = 496;
+	        var minWidth = 20;
+	        var widthFactor = params.iterations/params.total;
+	        var width = Math.max(minWidth,maxWidth * widthFactor);
+
+	        document.getElementById('bar').style.width = width + 'px';
+	        document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+	    });
+	    network.once("stabilizationIterationsDone", function() {
+	        document.getElementById('text').innerHTML = '100%';
+	        document.getElementById('bar').style.width = '496px';
+	        document.getElementById('loadingBar').style.opacity = 0;
+	        // really clean the dom element
+	        setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+	    });
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>
